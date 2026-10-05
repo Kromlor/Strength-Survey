@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>What Are Strengths? – Strengths Survey</title>
+<style>
+:root{--bg:#f4f1ea;--card:#fff;--ink:#1a1a1a;--accent:#1f4e79;--accent2:#2e7d4f;--focus:#ff9900;--muted:#444}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Verdana,"Atkinson Hyperlegible",Arial,sans-serif;font-size:22px;line-height:1.55}
+main{max-width:900px;margin:0 auto;padding:20px}
+.card{background:var(--card);border:3px solid #222;border-radius:16px;padding:28px;margin:16px 0}
+h1{font-size:1.7em;margin:.2em 0;color:var(--accent)}h2{font-size:1.35em;color:var(--accent);margin:.3em 0}
+button,.btn{font:inherit;font-size:.95em;padding:12px 22px;border-radius:12px;border:3px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;margin:6px 6px 6px 0;min-height:56px}
+button.sec{background:#fff;color:var(--accent)}button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible,input:focus-visible,textarea:focus-visible,label.opt:focus-within{outline:5px solid var(--focus);outline-offset:3px}
+input[type=text],textarea{font:inherit;padding:10px;border:3px solid #222;border-radius:10px;width:100%}
+textarea{min-height:120px}
+.progress{height:28px;background:#ddd;border:2px solid #222;border-radius:14px;overflow:hidden}
+.progress>div{height:100%;background:var(--accent2);transition:width .3s}
+.qtext{font-size:1.45em;font-weight:bold;margin:20px 0}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+label.opt{display:flex;flex-direction:column;align-items:center;text-align:center;border:3px solid #222;border-radius:14px;padding:12px 6px;cursor:pointer;background:#fff;font-size:.8em}
+label.opt input{position:absolute;opacity:0;width:1px;height:1px}
+label.opt .face{font-size:2.4em;line-height:1.2}
+label.opt.sel{background:#dcefe2;border-color:var(--accent2);border-width:5px;font-weight:bold}
+.def{background:#eef4fb;border-left:8px solid var(--accent);padding:12px 16px;border-radius:8px}
+.target{background:#fff6dd;border-left:8px solid #b07d00;padding:12px 16px;border-radius:8px}
+.small{font-size:.8em;color:var(--muted)}
+.top{display:flex;gap:16px;align-items:flex-start;border:2px solid #999;border-radius:12px;padding:12px;margin:10px 0}
+.top .ic{font-size:2.6em}
+.bar{display:flex;align-items:center;gap:8px;margin:3px 0;font-size:.78em}
+.bar .lab{width:230px;flex:none}.bar .track{flex:1;background:#e5e5e5;height:22px;border-radius:6px;overflow:hidden}
+.bar .fill{height:100%;background:var(--accent)}.bar .fill.hi{background:var(--accent2)}.bar .n{width:40px}
+.code{font-family:monospace;font-size:1.4em;background:#222;color:#fff;padding:10px 16px;border-radius:10px;display:inline-block;letter-spacing:2px;word-break:break-all}
+.hidden{display:none!important}
+table{border-collapse:collapse;font-size:.75em;width:100%}td,th{border:1px solid #888;padding:4px 6px;text-align:left}
+.tts{background:#fff;color:var(--accent)}
+@media(max-width:600px){body{font-size:18px}.scale{grid-template-columns:1fr}.bar .lab{width:140px}}
+@media print{button,.noprint{display:none!important}body{background:#fff;font-size:14px}.card{border:1px solid #999}}
+</style></head><body><main id="app">
+
+<section id="s-intro" class="card">
+ <p class="small">Social Skills (SEL) · Week 4 Day 1 · SEL 9 · Standard SA-2</p>
+ <h1>What Are Strengths?</h1>
+ <div class="def"><p><b>A character strength</b> is a good part of who you are. It shows in how you think, feel, and act.</p>
+ <p><b>Example:</b> Maya helps a new student find the lunchroom. Maya is showing <b>Kindness</b>. 💛</p></div>
+ <p class="target"><b>🎯 Learning target:</b> I can name what a character strength is and start finding mine.</p>
+ <p>You will read 24 sentences. For each one, pick how much it is like you. There are <b>no wrong answers</b>.</p>
+ <label for="name"><b>Your name or initials:</b></label>
+ <input type="text" id="name" maxlength="20" autocomplete="off">
+ <p><button id="startBtn">Start the survey ▶</button> <button class="tts" data-say="intro">🔊 Read aloud</button></p>
+ <p class="noprint"><button class="sec" id="teacherBtn">👩‍🏫 Teacher View</button> <button class="sec" id="resetBtn">↺ Start over / next student</button></p>
+</section>
+
+<section id="s-q" class="card hidden" aria-live="polite">
+ <p id="qcount" class="small"></p>
+ <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="24" id="pb"><div id="pbf"></div></div>
+ <p class="qtext" id="qtext" tabindex="-1"></p>
+ <fieldset style="border:0;padding:0"><legend class="small">How much is this like you?</legend><div class="scale" id="scale"></div></fieldset>
+ <p><button class="sec" id="backBtn">◀ Back</button><button class="tts" id="qSay">🔊 Read aloud</button><button id="nextBtn" disabled>Next ▶</button></p>
+ <p class="small">Tip: use arrow keys to pick, then Enter for Next.</p>
+</section>
+
+<section id="s-res" class="hidden">
+ <div class="card"><h1 id="resTitle">My Signature Strengths</h1>
+ <p>These are your <b>top 5</b> strengths from the survey. They are a starting point — you can grow every strength!</p>
+ <div id="top5"></div></div>
+ <div class="card"><h2>All 24 strengths, grouped into 6 big groups (virtues)</h2><div id="chart"></div></div>
+ <div class="card"><h2>✏️ Reflect</h2><label for="refl">One time I used my strength was...</label><textarea id="refl"></textarea></div>
+ <div class="card noprint" style="border-color:#2e7d4f;border-width:5px"><h2>📧 Email my results to my teacher</h2>
+ <p><button id="gmailBtn" style="font-size:1.15em;background:#2e7d4f;border-color:#2e7d4f">📧 Email my results to my teacher</button></p>
+ <p><a id="mailtoLink" class="btn sec" style="display:inline-block;text-decoration:none;background:#fff;color:var(--accent)" href="#">✉️ Use my email app</a><button class="sec" id="copyTxtBtn">📋 Copy results text</button></p>
+ <div id="emailMsg" class="target hidden" role="status"><b>✅ Check the email, then press Send.</b> <button class="tts" id="emailSay">🔊 Read aloud</button></div></div>
+ <div class="card noprint"><h2>Share with my class</h2>
+ <p>Give this code to your teacher:</p><p><span class="code" id="code"></span></p>
+ <p><button id="copyBtn" class="sec">📋 Copy code</button><button id="jsonBtn" class="sec">⬇ Download file</button><button id="printBtn">🖨 Print / Save as PDF</button></p>
+ <p><button class="sec" id="editBtn">◀ Change answers</button><button class="sec" id="reset2">↺ Start over / next student</button></p></div>
+</section>
+
+<section id="s-teacher" class="card hidden">
+ <h1>👩‍🏫 Teacher View – Class Preview</h1>
+ <p>Paste student codes (one per line), or upload student files.</p>
+ <textarea id="codes" aria-label="Student codes"></textarea>
+ <p><input type="file" id="files" multiple accept=".json,application/json" aria-label="Upload student JSON files"></p>
+ <p><button id="loadBtn">Show class results</button><button class="sec" id="demoBtn">Demo class data</button>
+ <label><input type="checkbox" id="anon" checked> Hide names (anonymous)</label></p>
+ <p id="tmsg" role="status"></p>
+ <div id="classOut"></div>
+ <p><button class="sec" id="csvBtn">⬇ Export CSV (Google Sheets)</button><button class="sec" id="tBack">◀ Back to start</button></p>
+</section>
+</main>
+<script>
+"use strict";
+const S=[
+// [name, virtue, icon, item, meaning, example]
+["Creativity","Wisdom","🎨","I like to think of new ideas or new ways to do things.","You come up with new and different ideas.","I show this when I draw, build, or solve a problem a new way."],
+["Curiosity","Wisdom","🔍","I like to ask questions and find out how things work.","You want to explore and learn about the world.","I show this when I ask 'why?' or try something new."],
+["Judgment","Wisdom","⚖️","I think things through before I decide.","You look at all sides before making a choice.","I show this when I stop and think before I pick."],
+["Love of Learning","Wisdom","📚","I feel happy when I learn something new.","You enjoy learning new things and skills.","I show this when I read or practice to get better."],
+["Perspective","Wisdom","🦉","Friends come to me when they need good advice.","You can see the big picture and help others.","I show this when I help a friend figure out a problem."],
+["Bravery","Courage","🦁","I do the right thing even when it feels scary.","You face hard or scary things.","I show this when I try something new or speak up."],
+["Perseverance","Courage","🧗","I keep trying even when something is hard.","You do not give up.","I show this when I finish my work even if it is tough."],
+["Honesty","Courage","✅","I tell the truth, even when it is hard.","You are truthful and real.","I show this when I tell the truth about a mistake."],
+["Zest","Courage","⚡","I have lots of energy and get excited to do things.","You bring energy and excitement.","I show this when I jump in and cheer others on."],
+["Love","Humanity","❤️","I care a lot about the people close to me.","You care about others and let them care about you.","I show this when I spend time with family or friends."],
+["Kindness","Humanity","💛","I like to help other people.","You are helpful and caring.","I show this when I help someone without being asked."],
+["Social Intelligence","Humanity","🤝","I can often tell how other people are feeling.","You notice feelings, yours and others'.","I show this when I see a friend is sad and check on them."],
+["Teamwork","Justice","👥","I do my part when I work in a group.","You work well with others.","I show this when I help my group finish a project."],
+["Fairness","Justice","🟰","I try to treat everyone the same and fair.","You give everyone a fair chance.","I show this when I take turns and let everyone play."],
+["Leadership","Justice","🧭","I can help a group get organized and work together.","You help a group do well.","I show this when I help my group make a plan."],
+["Forgiveness","Temperance","🕊️","I give people another chance after they make a mistake.","You let go of anger and forgive.","I show this when I stay friends after a fight."],
+["Humility","Temperance","🌱","I do not need to brag about what I do well.","You let your actions speak for you.","I show this when I let others have the spotlight."],
+["Prudence","Temperance","🛑","I am careful and think about what could happen.","You make careful, safe choices.","I show this when I think before I act or speak."],
+["Self-Regulation","Temperance","🧘","I can calm myself down when I am upset.","You manage your feelings and actions.","I show this when I take deep breaths and wait my turn."],
+["Appreciation of Beauty","Transcendence","🌅","I notice beautiful things, like nature, art, or music.","You notice beauty and great skill around you.","I show this when I stop to look at the sky or enjoy music."],
+["Gratitude","Transcendence","🙏","I notice good things and say thank you.","You feel and show thanks.","I show this when I thank someone who helped me."],
+["Hope","Transcendence","🌈","I believe good things can happen in the future.","You expect good things and work toward them.","I show this when I set a goal and believe I can reach it."],
+["Humor","Transcendence","😄","I like to make people laugh and smile.","You bring fun and laughter.","I show this when I tell a joke to cheer someone up."],
+["Purpose/Meaning","Transcendence","⭐","I feel like I have a reason to do good things in the world.","You know what matters to you and why.","I show this when I do something that matters to me, like helping my community."]];
+const VIRTUES=["Wisdom","Courage","Humanity","Justice","Temperance","Transcendence"];
+const FACES=[["😐","Not like me"],["🙂","A little like me"],["😊","Sort of like me"],["😃","A lot like me"],["🤩","Very much like me"]];
+const TEACHER_EMAIL="Riley_Renwick@bismarckschools.org"; // change teacher email here
+const KEY="strengthsSurvey_v1";const AL="ABCDEFGHJKLMNPQRSTUVWXY23";// 25 chars
+let st=load();const $=id=>document.getElementById(id);
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){return fresh()}}
+function fresh(){return{name:"",answers:Array(24).fill(0),q:0,screen:"intro",refl:""}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}}
+function show(s){["intro","q","res","teacher"].forEach(x=>$("s-"+x).classList.toggle("hidden",x!==s));if(s!=="teacher"){st.screen=s;save()}window.scrollTo(0,0);stopSpeak()}
+function say(t){if(!("speechSynthesis" in window))return alert("Read aloud is not available on this device.");speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.9;speechSynthesis.speak(u)}
+function stopSpeak(){if("speechSynthesis" in window)speechSynthesis.cancel()}
+function rank(a){return S.map((s,i)=>({i,v:a[i]})).sort((x,y)=>y.v-x.v||x.i-y.i)}
+function encode(name,a){let c="";for(let i=0;i<24;i+=2)c+=AL[(a[i]-1)*5+(a[i+1]-1)];const n=(name||"").replace(/[^A-Za-z0-9 .-]/g,"").slice(0,12);return c+(n?"-"+n:"")}
+function decode(str){str=str.trim();if(!str)return null;const m=str.match(/^([A-Z2-9]{12})(?:-(.*))?$/i);if(!m)return null;const c=m[1].toUpperCase(),a=[];for(const ch of c){const k=AL.indexOf(ch);if(k<0)return null;a.push(Math.floor(k/5)+1,k%5+1)}return{name:(m[2]||"").trim(),answers:a}}
+function dl(name,text,type){const b=new Blob([text],{type});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+// Intro
+$("name").value=st.name;$("name").oninput=e=>{st.name=e.target.value;save()};
+document.querySelector('[data-say="intro"]').onclick=()=>say("What are strengths? A character strength is a good part of who you are. It shows in how you think, feel, and act. Example: Maya helps a new student find the lunchroom. Maya is showing kindness. Learning target: I can name what a character strength is and start finding mine. You will read 24 sentences. For each one, pick how much it is like you. There are no wrong answers. Type your name or initials, then press Start.");
+$("startBtn").onclick=()=>{st.name=$("name").value.trim();const f=st.answers.indexOf(0);if(f<0){renderRes();show("res")}else{st.q=f;renderQ();show("q")}};
+function resetAll(){if(!confirm("Start over? This clears these answers for the next student."))return;localStorage.removeItem(KEY);st=fresh();$("name").value="";$("refl").value="";show("intro");$("name").focus()}
+$("resetBtn").onclick=resetAll;$("reset2").onclick=resetAll;
+
+// Questions
+function renderQ(){const i=st.q,s=S[i];$("qcount").textContent=`Question ${i+1} of 24`;
+ const done=st.answers.filter(x=>x).length;$("pbf").style.width=(done/24*100)+"%";$("pb").setAttribute("aria-valuenow",done);$("pb").setAttribute("aria-label",`${done} of 24 answered`);
+ $("qtext").textContent=s[3];
+ $("scale").innerHTML=FACES.map((f,k)=>`<label class="opt${st.answers[i]===k+1?" sel":""}"><input type="radio" name="r" value="${k+1}"${st.answers[i]===k+1?" checked":""}><span class="face" aria-hidden="true">${f[0]}</span><span>${f[1]}</span></label>`).join("");
+ $("scale").querySelectorAll("input").forEach(inp=>{inp.onchange=()=>{st.answers[i]=+inp.value;save();$("scale").querySelectorAll("label").forEach(l=>l.classList.toggle("sel",l.contains(inp)));$("nextBtn").disabled=false;const d=st.answers.filter(x=>x).length;$("pbf").style.width=(d/24*100)+"%";$("pb").setAttribute("aria-valuenow",d)};
+  inp.onkeydown=e=>{if(e.key==="Enter")$("nextBtn").click()}});
+ $("nextBtn").disabled=!st.answers[i];$("nextBtn").textContent=i===23?"See my results ▶":"Next ▶";$("backBtn").disabled=false;
+ (($("scale").querySelector("input:checked"))||$("scale").querySelector("input")).focus({preventScroll:true});}
+$("qSay").onclick=()=>say(S[st.q][3]+". Is this: not like me, a little like me, sort of like me, a lot like me, or very much like me?");
+$("nextBtn").onclick=()=>{if(!st.answers[st.q])return;if(st.q<23){st.q++;save();renderQ();stopSpeak()}else{renderRes();show("res")}};
+$("backBtn").onclick=()=>{if(st.q>0){st.q--;save();renderQ();stopSpeak()}else show("intro")};
+
+// Results
+function barHTML(lab,v,max,hi,n){return `<div class="bar"><span class="lab">${lab}</span><span class="track"><span class="fill${hi?" hi":""}" style="width:${v/max*100}%;display:block"></span></span><span class="n">${n}</span></div>`}
+function renderRes(){const r=rank(st.answers),top=r.slice(0,5).map(x=>x.i);
+ $("resTitle").textContent=(st.name?st.name+"'s ":"My ")+"Signature Strengths";
+ $("top5").innerHTML=top.map((i,k)=>{const s=S[i];return `<div class="top"><span class="ic" aria-hidden="true">${s[2]}</span><div><h2>${k+1}. ${s[0]}</h2><p><b>What it means:</b> ${s[4]}</p><p><b>${s[5]}</b></p><button class="tts" data-i="${i}">🔊 Read aloud</button></div></div>`}).join("");
+ $("top5").querySelectorAll("button").forEach(b=>b.onclick=()=>{const s=S[b.dataset.i];say(s[0]+". "+s[4]+" "+s[5])});
+ $("chart").innerHTML=VIRTUES.map(v=>`<h3>${v}</h3>`+S.map((s,i)=>s[1]===v?barHTML(`${s[2]} ${s[0]}`,st.answers[i],5,top.includes(i),st.answers[i]+"/5"):"").join("")).join("")+`<p class="small">Green bars = your top 5.</p>`;
+ $("refl").value=st.refl||"";$("code").textContent=encode(st.name,st.answers)}
+$("refl").oninput=e=>{st.refl=e.target.value;save()};
+$("copyBtn").onclick=()=>{const t=$("code").textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert("Code copied!"),()=>prompt("Copy this code:",t))};
+$("jsonBtn").onclick=()=>{const d={app:"strengths-survey",v:1,name:st.name,date:new Date().toISOString().slice(0,10),answers:st.answers,top5:rank(st.answers).slice(0,5).map(x=>S[x.i][0]),reflection:st.refl||""};dl(`strengths-${(st.name||"student").replace(/\W+/g,"_")}.json`,JSON.stringify(d,null,1),"application/json")};
+$("printBtn").onclick=()=>window.print();
+$("editBtn").onclick=()=>{st.q=0;renderQ();show("q")};
+
+// Email
+function emailParts(full){const r=rank(st.answers),nm=st.name||"Student",L=[];
+ L.push("Student: "+nm,"Date: "+new Date().toLocaleDateString(),"","MY TOP 5 STRENGTHS:");
+ r.slice(0,5).forEach((x,k)=>L.push(`${k+1}. ${S[x.i][0]} - ${S[x.i][4]}`));
+ L.push("","REFLECTION - One time I used my strength was:",(st.refl||"").trim()||"(not written yet)","","RESULTS CODE (paste into Teacher View): "+encode(st.name,st.answers));
+ if(full){L.push("","ALL 24 RATINGS (1 = Not like me, 5 = Very much like me):");VIRTUES.forEach(v=>{L.push(v+":");S.forEach((s,i)=>{if(s[1]===v)L.push(`  ${s[0]}: ${st.answers[i]}/5`)})})}
+ return{to:TEACHER_EMAIL,su:"Strengths Survey Results - "+nm,body:L.join("\n")}}
+function gmailURL(){const e=emailParts(true);return "https://mail.google.com/mail/?view=cm&fs=1&to="+encodeURIComponent(e.to)+"&su="+encodeURIComponent(e.su)+"&body="+encodeURIComponent(e.body)}
+function mailtoURL(){const mk=f=>{const e=emailParts(f);return "mailto:"+e.to+"?subject="+encodeURIComponent(e.su)+"&body="+encodeURIComponent(e.body)};
+ let u=mk(true);if(u.length>1800)u=mk(false);if(u.length>1800){const e=emailParts(false);let b=e.body;const pre="mailto:"+e.to+"?subject="+encodeURIComponent(e.su)+"&body=";while((pre+encodeURIComponent(b)).length>1800)b=b.slice(0,-20);u=pre+encodeURIComponent(b)}return u}
+function emailShown(){$("emailMsg").classList.remove("hidden")}
+$("gmailBtn").onclick=()=>{window.open(gmailURL(),"_blank","noopener");emailShown()};
+$("mailtoLink").onclick=()=>{$("mailtoLink").href=mailtoURL();emailShown()};
+$("copyTxtBtn").onclick=()=>{const e=emailParts(true),t="To: "+e.to+"\nSubject: "+e.su+"\n\n"+e.body;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert("Results copied! Paste them into an email to your teacher."),()=>prompt("Copy this text:",t))};
+$("emailSay").onclick=()=>say("Check the email, then press Send.");
+
+// Teacher
+let cls=[];
+$("teacherBtn").onclick=()=>show("teacher");$("tBack").onclick=()=>show("intro");
+$("loadBtn").onclick=async()=>{const out=[];let bad=0;
+ $("codes").value.split(/[\s,;]+/).forEach(l=>{if(!l.trim())return;const d=decode(l);d?out.push(d):bad++});
+ for(const f of $("files").files){try{const j=JSON.parse(await f.text());if(Array.isArray(j.answers)&&j.answers.length===24&&j.answers.every(x=>x>=1&&x<=5))out.push({name:j.name||"",answers:j.answers,reflection:j.reflection||""});else bad++}catch(e){bad++}}
+ cls=out;$("tmsg").textContent=`Loaded ${out.length} student(s).`+(bad?` ${bad} item(s) could not be read.`:"");renderClass()};
+$("demoBtn").onclick=()=>{const names=["AJ","Bri","Carlos","Dev","Emma","Finn","Gia","Hana","Isaac","Jada","Kai","Luis","Mia","Noah","Omar","Priya"];
+ let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+ cls=names.map(n=>({name:n,answers:S.map((s,i)=>Math.min(5,Math.max(1,Math.round(2.6+rnd()*2.6+([10,6,22,1,12].includes(i)?.8:0)))))}));
+ $("codes").value=cls.map(c=>encode(c.name,c.answers)).join("\n");$("tmsg").textContent=`Loaded ${cls.length} demo students.`;renderClass()};
+$("anon").onchange=renderClass;
+function renderClass(){if(!cls.length){$("classOut").innerHTML="";return}const cnt=Array(24).fill(0);cls.forEach(c=>rank(c.answers).slice(0,5).forEach(x=>cnt[x.i]++));
+ const order=cnt.map((n,i)=>({n,i})).sort((a,b)=>b.n-a.n||a.i-b.i),max=Math.max(1,order[0].n),anon=$("anon").checked;
+ $("classOut").innerHTML=`<h2>Our class's most common top strengths</h2><p class="small">Number of students with each strength in their top 5 (${cls.length} students).</p>`+
+ order.filter(o=>o.n).map((o,k)=>barHTML(`${S[o.i][2]} ${S[o.i][0]}`,o.n,max,k<5,o.n)).join("")+
+ `<h2>By student</h2><table><tr><th>Student</th><th>Top 5</th></tr>`+cls.map((c,k)=>`<tr><td>${anon?"Student "+(k+1):esc(c.name||"Student "+(k+1))}</td><td>${rank(c.answers).slice(0,5).map(x=>S[x.i][0]).join(", ")}</td></tr>`).join("")+`</table>`}
+$("csvBtn").onclick=()=>{if(!cls.length)return alert("Load class data first.");const anon=$("anon").checked,q=s=>`"${String(s).replace(/"/g,'""')}"`;
+ const rows=[["Student","Top1","Top2","Top3","Top4","Top5",...S.map(s=>s[0])].map(q).join(",")];
+ cls.forEach((c,k)=>rows.push([anon?"Student "+(k+1):(c.name||"Student "+(k+1)),...rank(c.answers).slice(0,5).map(x=>S[x.i][0]),...c.answers].map(q).join(",")));
+ dl("class-strengths.csv",rows.join("\n"),"text/csv")};
+
+// restore
+if(st.screen==="q"){renderQ();show("q")}else if(st.screen==="res"&&st.answers.indexOf(0)<0){renderRes();show("res")}else show("intro");
+</script></body></html>
